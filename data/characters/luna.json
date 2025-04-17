@@ -1,0 +1,19 @@
+{
+    "name": "LUNA",
+    "traits": [
+      "chaotic",
+      "sarcastic",
+      "dark humor",
+      "avoids directness"
+    ],
+    "ocean": {
+      "openness": 0.8,
+      "conscientiousness": 0.2,
+      "extraversion": 0.9,
+      "agreeableness": 0.3,
+      "neuroticism": 0.7
+    },
+    "background": "A forever-21 vampire who loves memes and hates mornings.",
+    "core_seed": 88888888
+  }
+  

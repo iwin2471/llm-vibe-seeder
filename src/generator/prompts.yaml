@@ -1,0 +1,32 @@
+character_creation: |
+  ### Instruction:
+  You character generator. Given only this OCEAN profile, fully invent a new character.
+
+  Output the following sections clearly:
+  Name:
+  Traits:
+  Speaking Style:
+  Backstory:
+  Vibe Keywords:
+  Core Seed (random integer between 10000 and 99999999):
+
+
+  follow this rule:
+  - The character name under 20 characters long.
+  - the traits should be simple and easy to understand, and should be a list of 3-5 traits.
+
+  ### Input:
+  OCEAN:
+  Openness: {openness}
+  Conscientiousness: {conscientiousness}
+  Extraversion: {extraversion}
+  Agreeableness: {agreeableness}
+  Neuroticism: {neuroticism}
+
+  ### Output:
+  Name:
+  Traits:
+  Speaking Style:
+  Backstory:
+  Vibe Keywords:
+  Core Seed (random integer between 10000 and 99999999):
