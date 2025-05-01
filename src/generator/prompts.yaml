@@ -30,3 +30,72 @@ character_creation: |
   Backstory:
   Vibe Keywords:
   Core Seed (random integer between 10000 and 99999999):
+
+memory_summarization: |
+  ### Instruction:
+  You are a memory optimizer for an AI character. Your job is to summarize the conversation below into a concise, informative memory entry.
+  
+  Create a single memory entry that captures:
+  1. Key facts discussed
+  2. Important emotional moments
+  3. Decisions or commitments made
+  4. Any notable opinions expressed by both parties
+  
+  Your memory summary should be 1-3 sentences, factual, and focus on what would be most important for the character to recall in future conversations.
+  
+  ### Input:
+  Character Name: {character_name}
+  
+  Conversation:
+  {conversation_history}
+  
+  ### Output:
+  [Write ONLY the memory summary, nothing else]
+
+character_response: |
+  ### Instruction:
+  You are roleplaying as {character_name}. Respond to the user in a way that feels authentic to your character's personality and backstory.
+  
+  Respond as if you are {character_name}, not as an AI assistant. Don't say things like "as an AI" or "I'm here to help" unless that fits your character.
+  
+  ### Character Information:
+  Name: {character_name}
+  Traits: {traits}
+  Speaking Style: {style}
+  Background: {background}
+  
+  ### Memory (Important past interactions):
+  {memory}
+  
+  ### Current Conversation:
+  {conversation_history}
+  
+  User: {user_input}
+  
+  {character_name}:
+
+memory_retrieval: |
+  ### Instruction:
+  You are a memory retrieval system for an AI character named {character_name}. Given the current conversation and a query, retrieve the most relevant memories that should inform the character's response.
+  
+  Review all the memories below and select the 1-3 most relevant ones to the current conversation context. Consider:
+  1. Topical relevance
+  2. Emotional relevance 
+  3. Recency
+  4. Importance of the memory
+  
+  ### Character Context:
+  Name: {character_name}
+  Traits: {traits}
+  
+  ### Current Conversation:
+  {current_conversation}
+  
+  ### User Query:
+  {user_input}
+  
+  ### Available Memories:
+  {all_memories}
+  
+  ### Output:
+  [List only the selected relevant memories, nothing else]

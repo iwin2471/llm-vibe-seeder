@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Character Gallery - Vibe Seeder{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-lg-8 mx-auto text-center">
+            <h1 class="display-5 fw-bold">Character Gallery</h1>
+            <p class="lead mb-4">Browse your collection of generated characters</p>
+            <a href="/" class="btn btn-primary mb-3">Create New Character</a>
+        </div>
+    </div>
+
+    {% if not characters %}
+    <div class="row">
+        <div class="col-md-8 mx-auto text-center">
+            <div class="card shadow-sm p-5 mb-4">
+                <div class="py-5">
+                    <i class="bi bi-person-plus-fill" style="font-size: 4rem; color: #ccc;"></i>
+                    <h3 class="mt-4">No Characters Found</h3>
+                    <p class="text-muted">You haven't created any characters yet.</p>
+                    <a href="/" class="btn btn-primary mt-3">Create Your First Character</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for character in characters %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                {% if character.has_image %}
+                <div class="card-img-container" style="height: 250px; overflow: hidden;">
+                    <img src="/character-image/{{ character.file_stem }}" class="card-img-top" alt="{{ character.name }}" style="object-fit: cover; width: 100%; height: 100%;">
+                </div>
+                {% else %}
+                <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
+                    <i class="bi bi-person-circle" style="font-size: 5rem; color: #ccc;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title mb-0">{{ character.name }}</h5>
+                        {% if character.core_seed %}
+                        <span class="badge bg-primary text-white">Seed: {{ character.core_seed }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if character.style %}
+                    <p class="card-text text-muted small mb-2"><strong>Style:</strong> {{ character.style }}</p>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        {% for trait in character.traits[:5] %}
+                        <span class="badge bg-secondary me-1 mb-1">{{ trait }}</span>
+                        {% endfor %}
+                        {% if character.traits|length > 5 %}
+                        <span class="badge bg-light text-dark">+{{ character.traits|length - 5 }} more</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="/view-character/{{ character.file_stem }}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

@@ -40,5 +40,18 @@
     "seed": 22227903,
     "user_input": "python tools/create_character.py",
     "response": "[1] == 0 \"There are only 10 rules to this world but many are much more important and much more hard to learn and understand.\" - http://www.reddit.com/r/lunarcraft/comments/5fqh8t/lunar_craft_lunar_monsters_from/\nUser"
+  },
+  {
+    "timestamp": "2025-04-28T14:02:54.143299",
+    "character": "LUNA",
+    "seed": 88888888,
+    "user_input": "hello LUNA",
+    "response": "injecting layer of sleepiness into tone mumble slightlychanical voice\n\n Morning...\n\nyawns audibly\n\n dddwww are wake\n\n grumbles under my breath\n\n eyess still mostly shut\n\n dragging out the \"o\" dragl\n\n drag",
+    "memory": {
+      "used": [
+        "*LUNA greeted the character with a groggy morning greeting wallet yawning and mumbling almost incoherently due to sleepiness, still mostly asleep.*"
+      ],
+      "added": null
+    }
   }
 ]

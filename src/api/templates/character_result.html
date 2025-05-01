@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}{{ character.name }} - Vibe-Seeder{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="container">
+        <h1>{{ character.name }}</h1>
+        <p class="lead">Generated Character with Seed {{ character.core_seed }}</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+.character-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.trait-title {
+    font-weight: bold;
+    color: #6a11cb;
+}
+.trait-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+.trait-list li {
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.trait-list li:last-child {
+    border-bottom: none;
+}
+.ocean-bar {
+    height: 1.5rem;
+    margin-bottom: 1rem;
+    background-color: #e9ecef;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.ocean-progress {
+    height: 100%;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+}
+.copy-btn {
+    cursor: pointer;
+}
+.vibe-keyword {
+    display: inline-block;
+    background-color: #e9ecef;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    margin: 0.2rem;
+    font-size: 0.9rem;
+}
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">Character Card</div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ card_base64 }}" alt="{{ character.name }}" class="character-img mb-3">
+                    <div class="d-grid gap-2">
+                        <a href="/api/characters/{{ character.name | lower | replace(' ', '_') }}/image/download" class="btn btn-outline-primary" download>Download Card</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">Character Profile</div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Name:</span>
+                        </div>
+                        <div class="col-md-8">
+                            {{ character.name }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Traits:</span>
+                        </div>
+                        <div class="col-md-8">
+                            <ul class="trait-list">
+                                {% for trait in character.traits %}
+                                <li>{{ trait }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Speaking Style:</span>
+                        </div>
+                        <div class="col-md-8">
+                            {{ character.style }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Background:</span>
+                        </div>
+                        <div class="col-md-8">
+                            {{ character.background }}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Vibe Keywords:</span>
+                        </div>
+                        <div class="col-md-8">
+                            {% for keyword in character.vibe_keywords %}
+                            <span class="vibe-keyword">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <span class="trait-title">Core Seed:</span>
+                        </div>
+                        <div class="col-md-8">
+                            <span id="seedValue">{{ character.core_seed }}</span>
+                            <button class="btn btn-sm btn-outline-secondary ms-2 copy-btn" 
+                                    onclick="copyToClipboard('seedValue')" title="Copy seed">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">OCEAN Profile</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Openness</span>
+                            <span>{{ (ocean.openness * 100) | round | int }}%</span>
+                        </div>
+                        <div class="ocean-bar">
+                            <div class="ocean-progress" style="width: {{ (ocean.openness * 100) | round | int }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Conscientiousness</span>
+                            <span>{{ (ocean.conscientiousness * 100) | round | int }}%</span>
+                        </div>
+                        <div class="ocean-bar">
+                            <div class="ocean-progress" style="width: {{ (ocean.conscientiousness * 100) | round | int }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Extraversion</span>
+                            <span>{{ (ocean.extraversion * 100) | round | int }}%</span>
+                        </div>
+                        <div class="ocean-bar">
+                            <div class="ocean-progress" style="width: {{ (ocean.extraversion * 100) | round | int }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Agreeableness</span>
+                            <span>{{ (ocean.agreeableness * 100) | round | int }}%</span>
+                        </div>
+                        <div class="ocean-bar">
+                            <div class="ocean-progress" style="width: {{ (ocean.agreeableness * 100) | round | int }}%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Neuroticism</span>
+                            <span>{{ (ocean.neuroticism * 100) | round | int }}%</span>
+                        </div>
+                        <div class="ocean-bar">
+                            <div class="ocean-progress" style="width: {{ (ocean.neuroticism * 100) | round | int }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="/" class="btn btn-outline-secondary">Create Another Character</a>
+        <a href="{{ download_url }}" class="btn btn-primary" download>Download Character JSON</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const button = element.nextElementSibling;
+            button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>';
+            
+            setTimeout(() => {
+                button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>';
+            }, 2000);
+        });
+    }
+</script>
+{% endblock %} 

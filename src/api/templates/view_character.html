@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}{{ character.name }} - Vibe Seeder{% endblock %}
+
+{% block content %}
+<style>
+.progress-bar {
+    height: 100%;
+    background-color: #007bff;
+}
+</style>
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="/characters" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left"></i> Back to Characters
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Character Image -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100">
+                {% if has_image %}
+                <img src="/api/characters/{{ file_stem }}/image" class="card-img-top" alt="{{ character.name }}" 
+                     style="object-fit: cover; max-height: 500px;">
+                {% else %}
+                <div class="d-flex justify-content-center align-items-center p-5 bg-light" style="height: 400px;">
+                    <i class="bi bi-person-circle" style="font-size: 8rem; color: #ccc;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h2 class="card-title">{{ character.name }}</h2>
+                    {% if character.core_seed %}
+                    <p class="card-text mb-2">
+                        <span class="badge bg-primary">Seed: {{ character.core_seed }}</span>
+                    </p>
+                    {% endif %}
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/" class="btn btn-outline-primary">Create Similar Character</a>
+                        {% if has_image %}
+                        <a href="/api/characters/{{ file_stem }}/image/download" class="btn btn-outline-secondary" download>Download Image</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Character Details -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0">Traits</h3>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {% for trait in character.traits %}
+                        <span class="badge bg-secondary me-1 mb-1">{{ trait }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Personality Profile -->
+            {% if ocean %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0">Personality Profile</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5>OCEAN Model</h5>
+                            <div class="mb-4">
+                                {% for trait, value in ocean.items() %}
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>
+                                            <strong>{{ trait }}</strong>
+                                            {% if trait == 'Openness' %}
+                                            <small class="text-muted">(Conventional vs. Curious)</small>
+                                            {% elif trait == 'Conscientiousness' %}
+                                            <small class="text-muted">(Careless vs. Organized)</small>
+                                            {% elif trait == 'Extraversion' %}
+                                            <small class="text-muted">(Reserved vs. Outgoing)</small>
+                                            {% elif trait == 'Agreeableness' %}
+                                            <small class="text-muted">(Competitive vs. Cooperative)</small>
+                                            {% elif trait == 'Neuroticism' %}
+                                            <small class="text-muted">(Calm vs. Anxious)</small>
+                                            {% endif %}
+                                        </span>
+                                        <span>{{ value }}/100</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ value }}%;" aria-valuenow="{{ value }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Description and Speaking Style -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h3 class="mb-0">Character Details</h3>
+                </div>
+                <div class="card-body">
+                    {% if character.description %}
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p>{{ character.description }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if character.style %}
+                    <div class="mb-4">
+                        <h5>Speaking Style</h5>
+                        <p>{{ character.style }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if character.voice_instruction %}
+                    <div class="mb-4">
+                        <h5>Voice Instruction</h5>
+                        <p>{{ character.voice_instruction }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- JSON Data -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Raw Data</h3>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" 
+                            data-bs-target="#rawDataCollapse" aria-expanded="false" aria-controls="rawDataCollapse">
+                        Toggle View
+                    </button>
+                </div>
+                <div class="collapse" id="rawDataCollapse">
+                    <div class="card-body">
+                        <pre class="bg-light p-3 rounded"><code>{{ character|tojson(indent=2) }}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,5 +1,6 @@
 from transformers import pipeline, set_seed
 from src.generator.llm_loader import manager
+from typing import Dict
 
 
 def get_sampling_params(ocean: dict) -> dict:
@@ -21,17 +22,32 @@ def get_sampling_params(ocean: dict) -> dict:
     return {"temperature": temperature, "top_p": top_p}
 
 
-def generate_character(ocean: dict) -> str:
-
-    prompt = manager.generate_prompt("character_creation", openness=ocean['openness'],
+def generate_character(ocean: Dict[str, float]) -> str:
+    """
+    Generate a character based on OCEAN profile
+    
+    Args:
+        ocean: Dictionary with OCEAN trait values (0.0-1.0)
+        
+    Returns:
+        Generated character text
+    """
+    prompt = manager.generate_prompt("character_creation", 
+        openness=ocean['openness'],
         conscientiousness=ocean['conscientiousness'],
         extraversion=ocean['extraversion'],
         agreeableness=ocean['agreeableness'],
-        neuroticism=ocean['neuroticism'])
+        neuroticism=ocean['neuroticism']
+    )
     
     params = get_sampling_params(ocean)
     
-    result = manager.call_webui_api(prompt, max_tokens=300, temperature=params["temperature"], top_p=params["top_p"])
+    result = manager.call_webui_api(
+        prompt, 
+        max_tokens=300, 
+        temperature=params["temperature"], 
+        top_p=params["top_p"]
+    )
     return result
 
 

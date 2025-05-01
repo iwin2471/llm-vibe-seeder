@@ -1,9 +1,10 @@
-from typing import Dict
+from typing import Dict, List, Optional
 from src.generator.character_generator import generate_character
 import json
 import os
 import re
 import random
+import argparse
 
 
 def clean_output(raw_text: str) -> dict:
@@ -17,7 +18,7 @@ def clean_output(raw_text: str) -> dict:
         "style": "",
         "background": "",
         "vibe_keywords": [],
-        "core_seed": 0
+        "core_seed": 0,
     }
 
     current_key = None
@@ -60,23 +61,26 @@ def clean_output(raw_text: str) -> dict:
     return parts
 
 def generate_ocean_profile() -> Dict[str, float]:
-        return {
-            "openness": random.uniform(0, 1),
-            "conscientiousness": random.uniform(0, 1),
-            "extraversion": random.uniform(0, 1),
-            "agreeableness": random.uniform(0, 1),
-            "neuroticism": random.uniform(0, 1),
-        }
-        
-        
-def main():
-    print("=== vibe-seeder AI Character Creator ===\n")
+    """Generate random OCEAN personality profile"""
+    return {
+        "openness": random.uniform(0, 1),
+        "conscientiousness": random.uniform(0, 1),
+        "extraversion": random.uniform(0, 1),
+        "agreeableness": random.uniform(0, 1),
+        "neuroticism": random.uniform(0, 1),
+    }
 
+def main():
+    print("=== vibe-seeder AI Character Creator v0.2 ===\n")
+    
+    # Generate random OCEAN profile
     ocean = generate_ocean_profile()
+    
     print("=== OCEAN PROFILE ===")
     print(json.dumps(ocean, indent=2, ensure_ascii=False))
 
-    print("\nGenerating Character from OCEAN...")
+    # Character generation
+    print("\nGenerating Character from OCEAN profile...")
     raw_result = generate_character(ocean)
 
     print("\n=== RAW OUTPUT ===\n")
@@ -87,14 +91,19 @@ def main():
     print("\n=== CLEANED CHARACTER ===\n")
     print(json.dumps(persona, indent=2, ensure_ascii=False))
 
+    # Create data directory if it doesn't exist
+    os.makedirs("data/characters", exist_ok=True)
+    
     filename = persona["name"].lower().replace(" ", "_")
-
     output_path = os.path.join("data/characters", f"{filename}.json")
 
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(persona, f, indent=2, ensure_ascii=False)
 
     print(f"\nCharacter saved to {output_path}")
+
+if __name__ == "__main__":
+    main()
 
 
 

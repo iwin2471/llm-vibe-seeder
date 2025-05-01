@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Vibe-Seeder Character Creator{% endblock %}
+
+{% block header %}
+<div class="header">
+    <div class="container">
+        <h1>Vibe-Seeder Character Creator</h1>
+        <p class="lead">Create AI characters with personality driven by seed values</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+.form-range::-webkit-slider-thumb {
+    background: #6a11cb;
+}
+.form-range::-moz-range-thumb {
+    background: #6a11cb;
+}
+.ocean-value {
+    font-weight: bold;
+}
+#customForm {
+    display: none;
+}
+.form-check-input:checked {
+    background-color: #6a11cb;
+    border-color: #6a11cb;
+}
+.trait-description {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+</style>
+
+<div class="container">
+    {% if error %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ error }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    Character Creation
+                </div>
+                <div class="card-body">
+                    <form action="/api/characters" method="post">
+                        <div class="mb-4">
+                            <h5>Creation Method</h5>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="creation_method" id="randomOption" value="random" checked>
+                                <label class="form-check-label" for="randomOption">
+                                    Random OCEAN Profile
+                                </label>
+                                <div class="trait-description">Generate a character with random personality traits</div>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="creation_method" id="customOption" value="custom">
+                                <label class="form-check-label" for="customOption">
+                                    Custom OCEAN Values
+                                </label>
+                                <div class="trait-description">Specify exact personality trait values</div>
+                            </div>
+                        </div>
+
+                        <div id="customForm">
+                            <h5 class="mt-4">OCEAN Personality Traits</h5>
+                            <div class="mb-3">
+                                <label for="openness" class="form-label">
+                                    Openness <span class="ocean-value" id="opennessValue">0.5</span>
+                                </label>
+                                <div class="trait-description mb-2">Curiosity, creativity, and openness to new experiences</div>
+                                <input type="range" class="form-range" min="0" max="1" step="0.01" id="openness" name="openness" value="0.5">
+                                <div class="d-flex justify-content-between">
+                                    <small>Conservative/Traditional</small>
+                                    <small>Curious/Inventive</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="conscientiousness" class="form-label">
+                                    Conscientiousness <span class="ocean-value" id="conscientiousnessValue">0.5</span>
+                                </label>
+                                <div class="trait-description mb-2">Organization, responsibility, and self-discipline</div>
+                                <input type="range" class="form-range" min="0" max="1" step="0.01" id="conscientiousness" name="conscientiousness" value="0.5">
+                                <div class="d-flex justify-content-between">
+                                    <small>Spontaneous/Flexible</small>
+                                    <small>Organized/Disciplined</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="extraversion" class="form-label">
+                                    Extraversion <span class="ocean-value" id="extraversionValue">0.5</span>
+                                </label>
+                                <div class="trait-description mb-2">Sociability, assertiveness, and positive emotions</div>
+                                <input type="range" class="form-range" min="0" max="1" step="0.01" id="extraversion" name="extraversion" value="0.5">
+                                <div class="d-flex justify-content-between">
+                                    <small>Reserved/Quiet</small>
+                                    <small>Social/Energetic</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="agreeableness" class="form-label">
+                                    Agreeableness <span class="ocean-value" id="agreeablenessValue">0.5</span>
+                                </label>
+                                <div class="trait-description mb-2">Compassion, cooperation, and consideration</div>
+                                <input type="range" class="form-range" min="0" max="1" step="0.01" id="agreeableness" name="agreeableness" value="0.5">
+                                <div class="d-flex justify-content-between">
+                                    <small>Challenging/Analytical</small>
+                                    <small>Friendly/Compassionate</small>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="neuroticism" class="form-label">
+                                    Neuroticism <span class="ocean-value" id="neuroticismValue">0.5</span>
+                                </label>
+                                <div class="trait-description mb-2">Emotional sensitivity, anxiety, and mood instability</div>
+                                <input type="range" class="form-range" min="0" max="1" step="0.01" id="neuroticism" name="neuroticism" value="0.5">
+                                <div class="d-flex justify-content-between">
+                                    <small>Stable/Confident</small>
+                                    <small>Sensitive/Nervous</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="/characters" class="btn btn-outline-secondary">View Existing Characters</a>
+                            <button type="submit" class="btn btn-primary">Create Character</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Show/hide custom values form based on selection
+    document.getElementById('randomOption').addEventListener('change', function() {
+        document.getElementById('customForm').style.display = 'none';
+    });
+
+    document.getElementById('customOption').addEventListener('change', function() {
+        document.getElementById('customForm').style.display = 'block';
+    });
+
+    // Update display values for sliders
+    const sliders = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
+    sliders.forEach(trait => {
+        const slider = document.getElementById(trait);
+        const display = document.getElementById(`${trait}Value`);
+        
+        slider.addEventListener('input', function() {
+            display.textContent = parseFloat(slider.value).toFixed(2);
+        });
+    });
+</script>
+{% endblock %} 
